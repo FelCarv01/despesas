@@ -25,18 +25,6 @@ class _TransactionUserState extends State<TransactionUser> {
       title: 'recarga cell',
       value: 30,
       date: DateTime.now(),
-    ),
-    Transaction(
-      id: '3',
-      title: 'mercado',
-      value: 26.22,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: '4',
-      title: 'recarga cell',
-      value: 30,
-      date: DateTime.now(),
     )
   ];
 
