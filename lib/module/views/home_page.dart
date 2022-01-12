@@ -1,124 +1,99 @@
+import 'dart:math';
+
 import 'package:despesas/module/models/transaction.dart';
+import 'package:despesas/module/views/components/chart.dart';
+import 'package:despesas/module/views/components/transaction_form.dart';
+import 'package:despesas/module/views/components/transaction_list.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
-  final titleController = TextEditingController();
-  final valueController = TextEditingController();
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
-  final _transactions = [
+class _HomePageState extends State<HomePage> {
+  final List<Transaction> _transactions = [
     Transaction(
       id: '1',
       title: 'mercado',
       value: 26.22,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(const Duration(days: 1)),
     ),
     Transaction(
       id: '2',
       title: 'recarga cell',
       value: 30,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(const Duration(days: 3)),
     )
   ];
 
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((tr) {
+      return tr.date.isAfter(DateTime.now().subtract(
+        const Duration(days: 7),
+      ));
+    }).toList();
+  }
+
+  _addTransaction(String title, double value) {
+    final newTransaction = Transaction(
+      id: Random().nextDouble().toString(),
+      title: title,
+      value: value,
+      date: DateTime.now(),
+    );
+    setState(() {
+      _transactions.add(newTransaction);
+    });
+    Navigator.of(context).pop();
+  }
+
+  _openTransactionFormModal(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return TransactionForm(
+            onSubmit: _addTransaction,
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          width: double.infinity,
-          child: Card(
-            color: Colors.blueAccent,
-            child: Text('Grafico'),
-            elevation: 5,
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => _openTransactionFormModal(context),
+            icon: const Icon(Icons.add),
           ),
+        ],
+        elevation: 2,
+        title: const Text(
+          "Despesas Pessoais",
+          style: TextStyle(fontFamily: 'OpenSans'),
         ),
-        Column(
-          children: _transactions.map((tr) {
-            return Card(
-              child: Row(
-                children: [
-                  Container(
-                    color: Colors.deepOrange,
-                    padding: const EdgeInsets.all(10),
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 15),
-                    child: Center(
-                      child: Text(
-                        "R\$ ${tr.value.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        tr.title,
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        DateFormat('dd/MM/y').format(tr.date),
-                        style: const TextStyle(color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-        Card(
-          elevation: 5,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Titulo',
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: valueController,
-                  decoration: const InputDecoration(
-                    labelText: 'Valor R\$',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Adicionar Transação',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: Chart(_recentTransactions),
             ),
-          ),
-        )
-      ],
+            TransactionList(
+              transactions: _transactions,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _openTransactionFormModal(context),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

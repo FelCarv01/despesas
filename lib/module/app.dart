@@ -8,7 +8,20 @@ class Despesas extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Despesas Pessoais',
-      home: HomePage(),
+      home: const HomePage(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.indigo,
+          accentColor: Colors.blueGrey,
+        ),
+        fontFamily: 'Quicksand',
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+              fontFamily: "OpenSans",
+              fontWeight: FontWeight.bold,
+              fontSize: 18),
+        ),
+      ),
     );
   }
 }
