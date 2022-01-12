@@ -36,47 +36,27 @@ class TransactionList extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final tr = transactions[index];
                 return Card(
-                  child: Row(
-                    children: [
-                      Container(
-                        color: Theme.of(context).colorScheme.primary,
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 15),
-                        child: Center(
-                          child: Text(
-                            "R\$ ${tr.value.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                  elevation: 5,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: FittedBox(
+                          child: Text('R\$${tr.value.toStringAsFixed(2)}'),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            tr.title,
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontFamily: "OpenSans",
-                              color: Colors.green,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            DateFormat('dd/MM/y').format(tr.date),
-                            style: const TextStyle(
-                              color: Colors.black45,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
+                    title: Text(
+                      tr.title,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    subtitle: Text(
+                      DateFormat('d MMM y').format(tr.date),
+                    ),
                   ),
                 );
               },
