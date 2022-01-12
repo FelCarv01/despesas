@@ -5,10 +5,23 @@ class Despesas extends StatelessWidget {
   const Despesas({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Despesas Pessoais',
-      home: HomePage(),
+      home: const HomePage(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.indigo,
+          accentColor: Colors.blueGrey,
+        ),
+        fontFamily: 'Quicksand',
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+              fontFamily: "OpenSans",
+              fontWeight: FontWeight.bold,
+              fontSize: 18),
+        ),
+      ),
     );
   }
 }
