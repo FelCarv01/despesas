@@ -1,8 +1,10 @@
-import 'package:despesas/module/models/transaction.dart';
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:despesas/module/models/transaction.dart';
+import 'package:despesas/module/views/components/chart.dart';
 import 'package:despesas/module/views/components/transaction_form.dart';
 import 'package:despesas/module/views/components/transaction_list.dart';
+import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,20 +14,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _transactions = [
+  final List<Transaction> _transactions = [
     Transaction(
       id: '1',
       title: 'mercado',
       value: 26.22,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(const Duration(days: 1)),
     ),
     Transaction(
       id: '2',
       title: 'recarga cell',
       value: 30,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(const Duration(days: 3)),
     )
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((tr) {
+      return tr.date.isAfter(DateTime.now().subtract(
+        const Duration(days: 7),
+      ));
+    }).toList();
+  }
+
   _addTransaction(String title, double value) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
@@ -60,18 +71,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         elevation: 2,
-        title: const Text("Despesas Pessoais"),
+        title: const Text(
+          "Despesas Pessoais",
+          style: TextStyle(fontFamily: 'OpenSans'),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
-              child: Card(
-                color: Colors.blueAccent,
-                child: Text('Grafico'),
-                elevation: 5,
-              ),
+              child: Chart(_recentTransactions),
             ),
             TransactionList(
               transactions: _transactions,
