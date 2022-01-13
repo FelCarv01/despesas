@@ -14,20 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Transaction> _transactions = [
-    Transaction(
-      id: '1',
-      title: 'mercado',
-      value: 26.22,
-      date: DateTime.now().subtract(const Duration(days: 1)),
-    ),
-    Transaction(
-      id: '2',
-      title: 'recarga cell',
-      value: 30,
-      date: DateTime.now().subtract(const Duration(days: 3)),
-    )
-  ];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((tr) {
@@ -37,12 +24,12 @@ class _HomePageState extends State<HomePage> {
     }).toList();
   }
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime dateTime) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
-      date: DateTime.now(),
+      date: dateTime,
     );
     setState(() {
       _transactions.add(newTransaction);
@@ -64,6 +51,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        titleTextStyle: Theme.of(context).appBarTheme.titleTextStyle,
         actions: [
           IconButton(
             onPressed: () => _openTransactionFormModal(context),
@@ -73,7 +61,6 @@ class _HomePageState extends State<HomePage> {
         elevation: 2,
         title: const Text(
           "Despesas Pessoais",
-          style: TextStyle(fontFamily: 'OpenSans'),
         ),
       ),
       body: SingleChildScrollView(
