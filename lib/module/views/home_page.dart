@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:despesas/module/models/transaction.dart';
 import 'package:despesas/module/views/components/chart.dart';
@@ -57,30 +58,38 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleTextStyle: Theme.of(context).appBarTheme.titleTextStyle,
-        actions: [
-          IconButton(
-            onPressed: () => _openTransactionFormModal(context),
-            icon: const Icon(Icons.add),
-          ),
-        ],
-        elevation: 2,
-        title: const Text(
-          "Despesas Pessoais",
+    final appBar = AppBar(
+      titleTextStyle: Theme.of(context).appBarTheme.titleTextStyle,
+      actions: [
+        IconButton(
+          onPressed: () => _openTransactionFormModal(context),
+          icon: const Icon(Icons.add),
         ),
+      ],
+      title: Text(
+        "Despesas Pessoais",
+        style: TextStyle(fontSize: 20 * MediaQuery.of(context).textScaleFactor),
       ),
+    );
+    final availableHeigth = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
+              height: availableHeigth * .25,
               width: double.infinity,
               child: Chart(_recentTransactions),
             ),
-            TransactionList(
-              transactions: _transactions,
-              removeTransaction: _removeTransaction,
+            SizedBox(
+              height: availableHeigth * .75,
+              child: TransactionList(
+                transactions: _transactions,
+                removeTransaction: _removeTransaction,
+              ),
             ),
           ],
         ),
